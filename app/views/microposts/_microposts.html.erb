@@ -9,24 +9,32 @@
         <div>
           <p class="mb-0"><%= micropost.content %></p>
         </div>
-        <span class="glyphicon glyphicon-star"></span>
         <div>
+          
     <% if current_user.like?(micropost) %>
-      <%= form_with(model: current_user.favorites.find_by(micropost_id: micropost.id), local: true, method: :delete) do |f| %>
+      <%= form_with(model: current_user.favorites.find_by(micropost_id: micropost.id), 
+                    local:  true,
+                    method: :delete, 
+                    class:  "display_content") do |f| %>
         <%= hidden_field_tag :micropost_id, micropost.id %>
         <%= button_tag :type => "submit", :class =>"btn btn-link text-warning" do %>
           <i class="far fa-star"></i>
         <% end %>
       <% end %>
     <% else %>
-      <%= form_with(model: current_user.favorites.build, local: true) do |f| %>
+      <%= form_with(model: current_user.favorites.build, 
+                    local: true,
+                    class: "display_content") do |f| %>
         <%= hidden_field_tag :micropost_id, micropost.id %>
         <%= button_tag :type => "submit", :class =>"btn btn-link text-warning" do %>
           <i class="fa fa-star"></i>
         <% end %>
       <% end %>
     <% end %>
-
+    
+    <% if current_user == micropost.user %>
+      <%= link_to "Delete", micropost, method: :delete, data: { confirm: "You sure?" }, class: 'btn btn-danger btn-sm' %>
+    <% end %>
         </div>
       </div>
     </li>

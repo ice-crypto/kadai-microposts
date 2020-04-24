@@ -6,9 +6,13 @@ class UsersController < ApplicationController
   end
 
   def show
-     @user = User.find(params[:id])
-     @microposts = @user.microposts.order(id: :desc).page(params[:page])
-     counts(@user)
+     @user = User.find_by(id: params[:id])
+     if @user
+       @microposts = @user.microposts.order(id: :desc).page(params[:page])
+       counts(@user)
+     else
+       redirect_user_not_found
+     end
   end
 
   def new
@@ -29,22 +33,34 @@ class UsersController < ApplicationController
   
   
   def followings
-    @user = User.find(params[:id])
+    @user = User.find_by(id: params[:id])
+    if @user
     @followings = @user.followings.page(params[:page])
     counts(@user)
+    else
+     redirect_user_not_found
+    end
   end
   
   def followers
-    @user = User.find(params[:id])
+    @user = User.find_by(id: params[:id])
+    if @user
     @followers = @user.followers.page(params[:page])
     counts(@user)
+    else
+      redirect_user_not_found
+    end
   end
   
   
   def likes
-    @user = User.find(params[:id])
+    @user = User.find_by(id: params[:id])
+    if @user
     @likes = @user.likes.page(params[:page])
     counts(@user)
+    else
+      redirect_user_not_found
+    end
   end
   
   
@@ -52,5 +68,10 @@ class UsersController < ApplicationController
 
   def user_params
     params.require(:user).permit(:name, :email, :password, :password_confirmation)
+  end
+  
+  def redirect_user_not_found
+    flash[:danger] = "存在しないユーザIDです"
+    redirect_to root_path
   end
 end
