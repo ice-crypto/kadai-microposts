@@ -10,9 +10,12 @@
           <p class="mb-0"><%= like.content %></p>
         </div>
         <div>
-          <% if current_user == like.user %>
-            <%= link_to "Delete", like, method: :delete, data: { confirm: "You sure?" }, class: 'btn btn-danger btn-sm' %>
-          <% end %>
+      <%= form_with(model: current_user.favorites.find_by(micropost_id: like[:id]), local: true, method: :delete) do |f| %>
+        <%= hidden_field_tag :micropost_id, like[:id] %>
+        <%= button_tag :type => "submit", :class =>"btn btn-link text-warning" do %>
+          <i class="far fa-star"></i>
+        <% end %>
+      <% end %>
         </div>
       </div>
     </li>
