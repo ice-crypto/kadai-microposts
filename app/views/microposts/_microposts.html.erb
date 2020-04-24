@@ -9,9 +9,19 @@
         <div>
           <p class="mb-0"><%= micropost.content %></p>
         </div>
+        <span class="glyphicon glyphicon-star"></span>
         <div>
           <% if current_user == micropost.user %>
             <%= link_to "Delete", micropost, method: :delete, data: { confirm: "You sure?" }, class: 'btn btn-danger btn-sm' %>
+            <% if current_user.like?(micropost) %>
+              <%= link_to current_user.favorites.find_by(micropost_id: micropost.id), method: :delete do %>
+              <i class="far fa-star"></i>
+              <% end %>
+            <% else %>
+               <%= link_to current_user.favorites.build, method: :post do %>
+               <i class="fas fa-star"></i>
+               <% end %>
+            <% end %>
           <% end %>
         </div>
       </div>
